@@ -9,9 +9,11 @@ use Eboreum\PhpunitWithConsecutiveAlternative\FunctionCallSequence;
 
 ...
 
+$object = $this->createMock(DateTime::class);
+
 $functionCallSequence = new FunctionCallSequence();
 $functionCallSequence->expect(
-    $this->createMock(DateTime::class),
+    $object,
     'setISODate',
     new FunctionCallExpectation($object, 1999, 42),
     new FunctionCallExpectation($object, 2000, 43, 2),
