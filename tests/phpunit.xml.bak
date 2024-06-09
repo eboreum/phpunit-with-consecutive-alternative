@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+    bootstrap="phpunit.bootstrap.php"
+    colors="true"
+    forceCoversAnnotation="true"
+    >
+    <testsuites>
+        <testsuite name="Unit test suite">
+            <directory>./tests/Unit</directory>
+        </testsuite>
+    </testsuites>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">../src</directory>
+        </include>
+        <report>
+            <html outputDirectory="../var/coverage" lowUpperBound="50" highLowerBound="80"/>
+        </report>
+    </coverage>
+</phpunit>

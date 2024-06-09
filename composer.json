@@ -1,0 +1,45 @@
+{
+    "name": "eboreum/phpunit-with-consecutive-alternative",
+    "description": "Do you miss the old \"withConsecutive\" method in PHPUnit? This library fixes that problem for you.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": [
+        "phpunit",
+        "withconsecutive"
+    ],
+    "authors": [
+        {
+            "name": "Kasper Søfren",
+            "email": "soefritz@gmail.com",
+            "homepage": "https://github.com/kafoso"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Eboreum\\PhpunitWithConsecutiveAlternative\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TestResource\\Unit\\Eboreum\\PhpunitWithConsecutiveAlternative\\": "tests/resources/Unit",
+            "Test\\Unit\\Eboreum\\PhpunitWithConsecutiveAlternative\\": "tests/tests/Unit"
+        }
+    },
+    "require": {
+        "php": ">=8.2",
+        "eboreum/caster": "^1.1",
+        "eboreum/exceptional": "^1.0",
+        "phpunit/phpunit": "^11.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "1.8.10",
+        "slevomat/coding-standard": "^8.15.0",
+        "squizlabs/php_codesniffer": "3.10.1"
+    }
+}
