@@ -38,6 +38,7 @@
     },
     "require-dev": {
         "phpstan/phpstan": "1.11.5",
+        "sebastian/diff": "^6.0",
         "slevomat/coding-standard": "8.15.0",
         "squizlabs/php_codesniffer": "3.10.1"
     }
