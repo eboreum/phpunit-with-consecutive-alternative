@@ -13,6 +13,7 @@ Do you miss the old "[withConsecutive](https://docs.phpunit.de/en/8.5/test-doubl
 Within a test method — i.e. a method inside a child of `\PHPUnit\Framework\TestCase` — simply do the following:
 
 ```php
+use Eboreum\PhpunitWithConsecutiveAlternative\MethodCallExpectation;
 use Eboreum\PhpunitWithConsecutiveAlternative\WillHandleConsecutiveCalls;
 
 ...
@@ -41,6 +42,7 @@ Make your own (abstract) test case class and simply add a proxy method doing the
 Example:
 
 ```php
+use Eboreum\PhpunitWithConsecutiveAlternative\MethodCallExpectation;
 use Eboreum\PhpunitWithConsecutiveAlternative\WillHandleConsecutiveCalls;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
