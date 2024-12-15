@@ -59,7 +59,7 @@ class ReadmeMdTest extends TestCase
             $this->contents === $producedContents,
             sprintf(
                 "README.md is not up–to-date. Please run: php script/make-readme.php: Diff:\n\n%s",
-                (new Differ(new UnifiedDiffOutputBuilder()))->diff($this->contents, $producedContents),
+                (new Differ(new UnifiedDiffOutputBuilder()))->diff($this->contents, $producedContents ?: ''),
             ),
         );
     }
