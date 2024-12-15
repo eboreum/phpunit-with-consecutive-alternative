@@ -83,3 +83,17 @@ A core problem was the disjointed connection between arguments and their corresp
 In order to make this connection abundantly clear, the value-object class `\Eboreum\PhpunitWithConsecutiveAlternative\MethodCallExpectation` has been implemented. Within it is stored a return value (required) and 0 or more arguments.
 
 **Notice:** You may indeed use callbacks (i.e. `\PHPUnit\Framework\TestCase->callback(...)`) for the arguments instead of the actual values.
+
+# License & Disclaimer
+
+See [`LICENSE`](LICENSE) file. Basically: Use this library at your own risk.
+
+# Contributing
+
+We prefer that you create a ticket and or a pull request at https://github.com/eboreum/phpunit-with-consecutive-alternative, and have a discussion about a feature or bug here.
+
+# Credits
+
+## Authors
+
+- **Kasper Søfren** (kafoso)<br>E-mail: <a href="mailto:soefritz@gmail.com">soefritz@gmail.com</a><br>Homepage: <a href="https://github.com/kafoso">https://github.com/kafoso</a>
