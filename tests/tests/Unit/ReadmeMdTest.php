@@ -6,10 +6,9 @@ namespace Test\Unit\Eboreum\PhpunitWithConsecutiveAlternative;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
-
-use SebastianBergmann\Diff\Diff;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+
 use function array_map;
 use function array_shift;
 use function assert;
