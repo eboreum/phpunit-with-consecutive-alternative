@@ -1,0 +1,17 @@
+services:
+  "php8.3":
+    container_name: eboreum-phpunit-with-consecutive-alternative-php8.3
+    image: php:8.3-cli-alpine
+    build:
+      context: .
+      dockerfile: ./docker/php8.3-cli-alpine/Dockerfile
+      args:
+        UID: ${UID:-invalid}
+        GID: ${GID:-invalid}
+    working_dir: /app
+    environment:
+      UID: ${UID:-invalid}
+      GID: ${GID:-invalid}
+    volumes:
+      - .:/app
+    tty: true

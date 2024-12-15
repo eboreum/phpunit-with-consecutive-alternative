@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Eboreum\PhpunitWithConsecutiveAlternative;
 
-use Eboreum\Caster\Caster;
-
 use function array_key_exists;
 use function class_exists;
 use function is_a;
@@ -19,14 +17,16 @@ abstract class Assert
      */
     public static function classExists(string $className): void
     {
-        if (false === class_exists($className)) {
-            throw new AssertException(
-                sprintf(
-                    'Argument $className = %s references a class, which does not exist',
-                    Caster::getInstance()->castTyped($className),
-                ),
-            );
+        if (class_exists($className)) {
+            return;
         }
+
+        throw new AssertException(
+            sprintf(
+                'Argument $className = %s references a class, which does not exist',
+                Caster::getInstance()->castTyped($className),
+            ),
+        );
     }
 
     /**
@@ -34,14 +34,16 @@ abstract class Assert
      */
     public static function isObject(mixed $value): void
     {
-        if (false === is_object($value)) {
-            throw new AssertException(
-                sprintf(
-                    'Argument $value = %s must be an object, but it is not',
-                    Caster::getInstance()->castTyped($value),
-                ),
-            );
+        if (is_object($value)) {
+            return;
         }
+
+        throw new AssertException(
+            sprintf(
+                'Argument $value = %s must be an object, but it is not',
+                Caster::getInstance()->castTyped($value),
+            ),
+        );
     }
 
     /**
@@ -53,15 +55,17 @@ abstract class Assert
     {
         self::classExists($className);
 
-        if (false === is_a($object, $className)) {
-            throw new AssertException(
-                sprintf(
-                    'Argument $object = %s must an instance of \\%s, but it is not',
-                    Caster::getInstance()->castTyped($object),
-                    $className,
-                ),
-            );
+        if (is_a($object, $className)) {
+            return;
         }
+
+        throw new AssertException(
+            sprintf(
+                'Argument $object = %s must an instance of \\%s, but it is not',
+                Caster::getInstance()->castTyped($object),
+                $className,
+            ),
+        );
     }
 
     /**
@@ -71,14 +75,16 @@ abstract class Assert
      */
     public static function keyExists(array $array, int|string $key): void
     {
-        if (false === array_key_exists($key, $array)) {
-            throw new AssertException(
-                sprintf(
-                    'Argument $array = %s does not have a key %s',
-                    Caster::getInstance()->castTyped($array),
-                    Caster::getInstance()->cast($key),
-                ),
-            );
+        if (array_key_exists($key, $array)) {
+            return;
         }
+
+        throw new AssertException(
+            sprintf(
+                'Argument $array = %s does not have a key %s',
+                Caster::getInstance()->castTyped($array),
+                Caster::getInstance()->cast($key),
+            ),
+        );
     }
 }

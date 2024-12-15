@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Test\Unit\Eboreum\PhpunitWithConsecutiveAlternative;
 
 use DateTime;
-use Eboreum\Caster\Caster;
 use Eboreum\PhpunitWithConsecutiveAlternative\Assert;
+use Eboreum\PhpunitWithConsecutiveAlternative\Caster;
 use Eboreum\PhpunitWithConsecutiveAlternative\RuntimeException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;

@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace Eboreum\PhpunitWithConsecutiveAlternative;
 
 /**
- * A class for storing a return value and potentially arguments.
+ * A class for storing a return value and (potentially) arguments.
  */
-
-readonly class FunctionCallExpectation
+readonly class MethodCallExpectation
 {
     /** @var array<mixed> */
     public array $arguments;
