@@ -60,7 +60,10 @@ abstract class AbstractUnitTestCase extends TestCase
 }
 ```
 
-**Notice:** We do not hook into `\PHPUnit\Framework\MockObject\MockObject` and so — contrary to the original `withConsecutive` — we place this on `\PHPUnit\Framework\TestCase` instead.
+⚠️ **Notice:** We do _**not**_ hook into `\PHPUnit\Framework\MockObject\Builder\InvocationMocker` and so — contrary to the original `withConsecutive` — we place the above method on `\PHPUnit\Framework\TestCase` instead.
+
+ - In simpler terms: You call a method on `\PHPUnit\Framework\TestCase`, with the mock as an argument, rather than calling a method on the mock itself.
+ - This change is largely because PHPUnit utilizes the "final" keyword a lot on classes and does not support decorators, making extending (an instance of) InvocationMocker nigh-impossible (unless we do evil class-override things).
 
 # Why was "withConsecutive" removed?
 
