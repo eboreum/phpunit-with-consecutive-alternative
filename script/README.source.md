@@ -8,6 +8,16 @@ A sensible alternative to PHPUnit's now removed "withConsecutive" method
 
 Do you miss the old "[withConsecutive](https://docs.phpunit.de/en/8.5/test-doubles.html?highlight=withconsecutive#test-doubles-mock-objects-examples-with-consecutive-php)" method in PHPUnit? This library solves that problem for you.
 
+# Installation
+
+Via [Composer](https://getcomposer.org/) (https://packagist.org/packages/eboreum/phpunit-with-consecutive-alternative):
+
+    composer install eboreum/phpunit-with-consecutive-alternative
+
+Via GitHub:
+
+    git clone git@github.com:eboreum/phpunit-with-consecutive-alternative.git
+
 # Using this library
 
 Within a test method — i.e. a method inside a child of `\PHPUnit\Framework\TestCase` — simply do the following:
