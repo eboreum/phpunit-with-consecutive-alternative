@@ -11,8 +11,10 @@ use Eboreum\PhpunitWithConsecutiveAlternative\Reflection\ReflectionClass\Iterato
 use Eboreum\PhpunitWithConsecutiveAlternative\Reflection\ReflectionMethodLocator;
 use Eboreum\PhpunitWithConsecutiveAlternative\WillHandleConsecutiveCalls\CallbackFactory;
 use PHPUnit\Framework\Exception as PHPUnitException;
+use PHPUnit\Framework\MockObject\ConfigurableMethod;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Rule\InvokedCount;
+use PHPUnit\Framework\MockObject\StubInternal;
 use ReflectionClass;
 use ReflectionMethod;
 use Throwable;
@@ -94,12 +96,6 @@ class WillHandleConsecutiveCalls implements ImmutableObjectInterface
             /** @var ReflectionClass<object> $reflectionClass */
             $reflectionClass = new ReflectionClass($object);
 
-            /** @var ReflectionClass<object>|bool $reflectionClassParent */
-            $reflectionClassParent = $reflectionClass->getParentClass();
-
-            Assert::isObject($reflectionClassParent);
-            assert(is_object($reflectionClassParent));
-
             if (empty($methodCallExpectations)) {
                 $errorMessages[] = sprintf(
                     'Argument $methodCallExpectations = %s must not be empty',
@@ -107,22 +103,47 @@ class WillHandleConsecutiveCalls implements ImmutableObjectInterface
                 );
             }
 
+            /** @var ReflectionMethod|null $reflectionMethod */
+            $reflectionMethod = null;
+
+            if ($object instanceof StubInternal) {
+                foreach ($object->__phpunit_state()->configurableMethods() as $configurableMethod) {
+                    /** @var ConfigurableMethod $configurableMethod */
+
+                    if ($configurableMethod->name() === $methodName) {
+                        $iterator = new Iterator();
+
+                        foreach ($iterator->generate($reflectionClass) as $reflectionClassCurrent) {
+                            if ($reflectionClassCurrent->hasMethod($methodName)) {
+                                $reflectionMethod = $reflectionClassCurrent->getMethod($methodName);
+
+                                break;
+                            }
+                        }
+                    }
+
+                    if ($reflectionMethod) {
+                        break;
+                    }
+                }
+            } else {
+                /** @var ReflectionMethod|null $reflectionMethod */
+                $reflectionMethod = $this->reflectionMethodLocator->locate($reflectionClass, $methodName);
+            }
+
+            if (!$reflectionMethod) {
+                $errorMessages[] = sprintf(
+                    'Method named %s does not exist on $object = %s',
+                    $this->caster->cast($methodName),
+                    $this->caster->castTyped($object),
+                );
+            }
+
             if ($errorMessages) {
                 throw new PHPUnitException(implode('. ', $errorMessages));
             }
 
-            /** @var ReflectionMethod|null $reflectionMethod */
-            $reflectionMethod = $this->reflectionMethodLocator->locate($reflectionClassParent, $methodName);
-
-            if (!$reflectionMethod) {
-                throw new PHPUnitException(
-                    sprintf(
-                        'Method named %s does not exist on $object = %s',
-                        $this->caster->cast($methodName),
-                        $this->caster->castTyped($object),
-                    ),
-                );
-            }
+            assert(is_object($reflectionMethod));
 
             /** @var int<0,max> $caseCount */
             $caseCount = count($methodCallExpectations);
@@ -132,7 +153,7 @@ class WillHandleConsecutiveCalls implements ImmutableObjectInterface
             $willReturnCallback = $this->callbackFactory->createCallback(
                 $this,
                 $matcher,
-                $reflectionClassParent,
+                $reflectionClass,
                 $reflectionMethod,
                 $caseCount,
                 ...$methodCallExpectations,

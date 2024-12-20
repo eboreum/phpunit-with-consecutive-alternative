@@ -16,8 +16,11 @@ use Eboreum\PhpunitWithConsecutiveAlternative\WillHandleConsecutiveCalls\Callbac
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Exception;
+use PHPUnit\Framework\MockObject\Builder\InvocationMocker;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Rule\InvocationOrder;
 use PHPUnit\Framework\TestCase;
-use ReflectionClass;
+use ReflectionObject;
 use Throwable;
 
 use function implode;
@@ -49,7 +52,14 @@ class WillHandleConsecutiveCallsTest extends TestCase
 
     public function testExpectConsecutiveCallsHandlesExceptionGracefully(): void
     {
-        $object = $this->createMock(DateTime::class);
+        $object = new class implements MockObject
+        {
+            public function expects(InvocationOrder $invocationRule): InvocationMocker
+            {
+                return null; // @phpstan-ignore-line
+            }
+        };
+
         $reflectionMethodLocator = $this->createMock(ReflectionMethodLocator::class);
 
         $willHandleConsecutiveCalls = new WillHandleConsecutiveCalls(
@@ -156,7 +166,7 @@ class WillHandleConsecutiveCallsTest extends TestCase
                     "\n",
                     'Expected argument #2, but it does not exist.',
                 ]),
-                Caster::makeNormalizedClassName(new ReflectionClass(DateTime::class)),
+                Caster::makeNormalizedClassName(new ReflectionObject($object)),
                 Caster::getInstance()->castTyped(0),
             ),
         );
@@ -183,7 +193,7 @@ class WillHandleConsecutiveCallsTest extends TestCase
                     "\n",
                     'Expected argument #2, but it does not exist.',
                 ]),
-                Caster::makeNormalizedClassName(new ReflectionClass(DateTime::class)),
+                Caster::makeNormalizedClassName(new ReflectionObject($object)),
                 Caster::getInstance()->castTyped(0),
             ),
         );
@@ -290,12 +300,12 @@ class WillHandleConsecutiveCallsTest extends TestCase
         $this->expectExceptionMessage(
             sprintf(
                 implode('', [
-                    'On invocation 1/1, method call \\%s->setTimestamp($timestamp = %s) failed because 1 error was',
+                    'On invocation 1/1, method call %s->setTimestamp($timestamp = %s) failed because 1 error was',
                     ' encountered:',
                     "\n",
                     'Argument $timestamp = %s — a "with" callback — threw the exception: %s',
                 ]),
-                DateTime::class,
+                Caster::makeNormalizedClassName(new ReflectionObject($object)),
                 Caster::getInstance()->castTyped(0),
                 Caster::getInstance()->castTyped($callback),
                 Caster::getInstance()->cast($exception),
@@ -332,12 +342,12 @@ class WillHandleConsecutiveCallsTest extends TestCase
         $this->expectExceptionMessage(
             sprintf(
                 implode('', [
-                    'On invocation 1/1, method call \\%s->setTimestamp($timestamp = %s) failed because 1 error was',
+                    'On invocation 1/1, method call %s->setTimestamp($timestamp = %s) failed because 1 error was',
                     ' encountered:',
                     "\n",
                     'Argument $timestamp = %s — a "with" callback — threw the exception: %s.',
                 ]),
-                DateTime::class,
+                Caster::makeNormalizedClassName(new ReflectionObject($object)),
                 Caster::getInstance()->castTyped(0),
                 Caster::getInstance()->castTyped($callback),
                 Caster::getInstance()->cast($exception),
@@ -366,12 +376,12 @@ class WillHandleConsecutiveCallsTest extends TestCase
         $this->expectExceptionMessage(
             sprintf(
                 implode('', [
-                    'On invocation 1/1, method call \\%s->setTimestamp($timestamp = %s) failed because 1 error was',
+                    'On invocation 1/1, method call %s->setTimestamp($timestamp = %s) failed because 1 error was',
                     ' encountered:',
                     "\n",
                     'Argument $timestamp = %s was expected to be %s, but it is not.',
                 ]),
-                DateTime::class,
+                Caster::makeNormalizedClassName(new ReflectionObject($object)),
                 Caster::getInstance()->castTyped(0),
                 Caster::getInstance()->castTyped(0),
                 Caster::getInstance()->castTyped(1),
@@ -402,13 +412,13 @@ class WillHandleConsecutiveCallsTest extends TestCase
         $this->expectExceptionMessage(
             sprintf(
                 implode('', [
-                    'On invocation 1/1, method call \\%s->setTimestamp($timestamp = %s, {1} = %s) failed because 1',
+                    'On invocation 1/1, method call %s->setTimestamp($timestamp = %s, {1} = %s) failed because 1',
                     ' error was encountered:',
                     "\n",
                     'Method was expected to be called with 1 argument, but was instead called with 2, with the 1',
                     ' surplus argument being: {1} = %s.',
                 ]),
-                DateTime::class,
+                Caster::makeNormalizedClassName(new ReflectionObject($object)),
                 Caster::getInstance()->castTyped(0),
                 Caster::getInstance()->castTyped(2),
                 Caster::getInstance()->castTyped(2),
@@ -440,13 +450,13 @@ class WillHandleConsecutiveCallsTest extends TestCase
         $this->expectExceptionMessage(
             sprintf(
                 implode('', [
-                    'On invocation 1/1, method call \\%s->setDate($year = %s, $month = %s, $day = %s, {3} = %s) failed',
+                    'On invocation 1/1, method call %s->setDate($year = %s, $month = %s, $day = %s, {3} = %s) failed',
                     ' because 1 error was encountered:',
                     "\n",
                     'Method was expected to be called with 3 arguments, but was instead called with 4, with the 1',
                     ' surplus argument being: {3} = %s.',
                 ]),
-                DateTime::class,
+                Caster::makeNormalizedClassName(new ReflectionObject($object)),
                 Caster::getInstance()->castTyped(2000),
                 Caster::getInstance()->castTyped(1),
                 Caster::getInstance()->castTyped(2),
@@ -524,6 +534,21 @@ class WillHandleConsecutiveCallsTest extends TestCase
         }
 
         $this->fail('Exception was never thrown.');
+    }
+
+    public function testExpectConsecutiveCallsWorksWhenAnInterfaceIsPassed(): void
+    {
+        $mock = $this->createMock(CasterInterface::class);
+
+        $willHandleConsecutiveCalls = new WillHandleConsecutiveCalls();
+
+        $willHandleConsecutiveCalls->expectConsecutiveCalls(
+            $mock,
+            'cast',
+            new MethodCallExpectation('bar', 'foo'),
+        );
+
+        $this->assertSame('bar', $mock->cast('foo'));
     }
 
     public function testWithIsAbortingOnFirstFailureWorks(): void
