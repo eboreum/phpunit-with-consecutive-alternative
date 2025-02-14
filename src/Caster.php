@@ -8,6 +8,7 @@ use Eboreum\Caster\Caster as EboreumCaster;
 use Eboreum\Caster\CharacterEncoding;
 use Eboreum\Caster\Collection\Formatter\ObjectFormatterCollection;
 use Eboreum\Caster\Contract\CharacterEncodingInterface;
+use Eboreum\Caster\Contract\Formatter\ObjectFormatterInterface;
 use Eboreum\Caster\Formatter\Object_\ThrowableFormatter;
 
 class Caster extends EboreumCaster
@@ -31,9 +32,10 @@ class Caster extends EboreumCaster
 
         $self = new static($characterEncoding);
 
-        $self = $self->withCustomObjectFormatterCollection(
-            new ObjectFormatterCollection([new ThrowableFormatter()]),
-        );
+        /** @var array<ObjectFormatterInterface> $formatters */
+        $formatters = [new ThrowableFormatter()];
+
+        $self = $self->withCustomObjectFormatterCollection(new ObjectFormatterCollection($formatters));
 
         return $self;
     }

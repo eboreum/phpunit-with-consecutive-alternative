@@ -11,9 +11,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 
-use function assert;
-use function is_object;
-
 #[CoversClass(ReflectionMethodLocator::class)]
 class ReflectionMethodLocatorTest extends TestCase
 {
@@ -40,14 +37,12 @@ class ReflectionMethodLocatorTest extends TestCase
         $reflectionMethod = $reflectionMethodLocator->locate($reflectionClass, __FUNCTION__);
 
         $this->assertIsObject($reflectionMethod);
-        assert(is_object($reflectionMethod));
         $this->assertSame(__FUNCTION__, $reflectionMethod->getName());
         $this->assertSame(self::class, $reflectionMethod->getDeclaringClass()->getName());
 
         $reflectionMethod = $reflectionMethodLocator->locate($reflectionClass, 'setUp');
 
         $this->assertIsObject($reflectionMethod);
-        assert(is_object($reflectionMethod));
         $this->assertSame('setUp', $reflectionMethod->getName());
         $this->assertSame(TestCase::class, $reflectionMethod->getDeclaringClass()->getName());
 

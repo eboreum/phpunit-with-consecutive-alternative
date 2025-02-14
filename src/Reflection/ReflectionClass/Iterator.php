@@ -16,7 +16,7 @@ class Iterator
     /**
      * @param ReflectionClass<object> $reflectionClass
      *
-     * @return Generator<ReflectionClass<object>>:null
+     * @return Generator<ReflectionClass<object>>
      */
     public function generate(ReflectionClass $reflectionClass): Generator
     {

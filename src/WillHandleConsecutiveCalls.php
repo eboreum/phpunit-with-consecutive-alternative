@@ -114,6 +114,8 @@ class WillHandleConsecutiveCalls implements ImmutableObjectInterface
                         $iterator = new Iterator();
 
                         foreach ($iterator->generate($reflectionClass) as $reflectionClassCurrent) {
+                            /** @var ReflectionClass<object> $reflectionClassCurrent */
+
                             if ($reflectionClassCurrent->hasMethod($methodName)) {
                                 $reflectionMethod = $reflectionClassCurrent->getMethod($methodName);
 

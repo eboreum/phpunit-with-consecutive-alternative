@@ -5,3 +5,7 @@ parameters:
         - tests
     bootstrapFiles:
         - tests/phpunit.bootstrap.php
+    ignoreErrors:
+        -
+            path: tests/tests/Unit/
+            message: '#^Call to method PHPUnit\\Framework\\Assert::assertTrue\(\) with true will always evaluate to true\.#'

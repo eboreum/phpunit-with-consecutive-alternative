@@ -30,6 +30,8 @@ class IteratorTest extends TestCase
         ];
 
         foreach ($iterator->generate(new ReflectionClass(ClassB::class)) as $reflectionClassCurrent) {
+            /** @var ReflectionClass<object> $reflectionClassCurrent */
+
             $expectedClassName = array_shift($expectedClassNames);
 
             $this->assertSame($expectedClassName, $reflectionClassCurrent->getName());

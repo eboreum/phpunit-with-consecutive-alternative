@@ -34,7 +34,7 @@ class CallbackFactory implements ImmutableObjectInterface
     /**
      * @param ReflectionClass<object> $reflectionClassParent
      *
-     * @return Closure(InvokedCount, ReflectionClass, ReflectionMethod, int, ...MethodCallExpectation|Throwable):mixed
+     * @return Closure():mixed
      */
     public function createCallback(
         WillHandleConsecutiveCalls $willHandleConsecutiveCalls,
@@ -93,14 +93,13 @@ class CallbackFactory implements ImmutableObjectInterface
 
             $parameterCount = count($reflectionParameters);
             $actualArguments = func_get_args();
-            $actualArgumentsSequential = array_values($actualArguments);
             $expectedArguments = array_values($case->arguments);
 
             /** @var array<string> $errorMessages */
             $errorMessages = [];
 
             foreach ($expectedArguments as $index => $expectedValue) {
-                if (false === array_key_exists($index, $actualArgumentsSequential)) {
+                if (false === array_key_exists($index, $actualArguments)) {
                     $errorMessages[] = sprintf(
                         'Expected argument #%d, but it does not exist',
                         $index + 1,
@@ -113,15 +112,14 @@ class CallbackFactory implements ImmutableObjectInterface
                     continue;
                 }
 
-                /** @var int|non-empty-string $argumentName */
-                $argumentName = $index;
-
-                if (array_key_exists($index, $reflectionParameters)) {
-                    $argumentName = $reflectionParameters[$index]->getName();
-                }
+                /** @var int<0,max>|non-empty-string $argumentName */
+                $argumentName = match (array_key_exists($index, $reflectionParameters)) {
+                    true => $reflectionParameters[$index]->getName(),
+                    default => $index,
+                };
 
                 /** @var mixed $actualValue */
-                $actualValue = $actualArgumentsSequential[$index];
+                $actualValue = $actualArguments[$index];
 
                 if ($expectedValue instanceof Callback) {
                     try {

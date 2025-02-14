@@ -22,9 +22,10 @@ class ReflectionMethodLocator
      */
     public function locate(ReflectionClass $reflectionClass, string $methodName): ?ReflectionMethod
     {
-        /** @var string $methodNameLowercase */
+        /** @var lowercase-string&non-empty-string $methodNameLowercase */
         $methodNameLowercase = mb_strtolower($methodName);
 
+        /** @var ReflectionClass<object> $reflectionClassCurrent */
         foreach ($this->iterator->generate($reflectionClass) as $reflectionClassCurrent) {
             foreach ($reflectionClassCurrent->getMethods() as $reflectionMethod) {
                 if (mb_strtolower($reflectionMethod->getName()) === $methodNameLowercase) {
