@@ -28,6 +28,9 @@ jobs:
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
+      - name: "PHP ${{ matrix.php-version }}: Verify Composer '--strict-psr'"
+        run: composer dump-autoload -o --dry-run --strict-psr
+
       - name: "PHP ${{ matrix.php-version }}: Cache composer dependencies"
         uses: actions/cache@v3
         with:
